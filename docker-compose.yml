@@ -1,0 +1,9 @@
+services:
+  mcp-server:
+    build: .
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      HOST: 0.0.0.0
+      MCP_ALLOWED_HOSTS: ${MCP_ALLOWED_HOSTS:-}
+    restart: unless-stopped
