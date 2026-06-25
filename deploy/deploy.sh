@@ -37,3 +37,7 @@ ssh "$REMOTE" "cd ${DEPLOY_PATH} && PORT=${PORT} MCP_ALLOWED_HOSTS=${MCP_ALLOWED
 echo ""
 echo "Готово. MCP сервер доступен по адресу:"
 echo "  http://${DEPLOY_HOST}:${PORT}/mcp"
+echo ""
+echo "Логи на сервере:"
+echo "  ./logs.sh          # последние 100 строк"
+echo "  ./logs.sh -f       # в реальном времени"
