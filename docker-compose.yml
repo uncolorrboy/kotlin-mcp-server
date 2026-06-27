@@ -6,12 +6,12 @@ services:
     environment:
       HOST: 0.0.0.0
       MCP_ALLOWED_HOSTS: ${MCP_ALLOWED_HOSTS:-}
-      TASK_STORE_PATH: /data/scheduler.db
+      PIPELINE_OUTPUT_DIR: /data/pipeline
       LOG_FILE_PATH: /data/app.log
       LOG_MAX_LINES: "3000"
     volumes:
-      - scheduler-data:/data
+      - mcp-data:/data
     restart: unless-stopped
 
 volumes:
-  scheduler-data:
+  mcp-data:
