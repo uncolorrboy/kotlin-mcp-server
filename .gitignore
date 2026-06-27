@@ -46,3 +46,6 @@ bin/
 
 ### Deploy ###
 deploy/deploy.env
+
+### Scheduler data ###
+data/
