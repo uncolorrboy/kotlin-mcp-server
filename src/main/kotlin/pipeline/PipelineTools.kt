@@ -66,26 +66,6 @@ fun Server.registerPipelineTools(pipeline: PipelineService) {
             successResult(result)
         }
     }
-
-    addTool(
-        name = "run_pipeline",
-        description = "Ищет репозитории на GitHub, готовит сводку и сохраняет её в файл.",
-        inputSchema = ToolSchema(
-            properties = buildJsonObject {
-                put("query", stringProperty())
-                put("filename", stringProperty())
-            },
-            required = listOf("query"),
-        ),
-    ) { request ->
-        val query = request.arguments.requiredString("query")
-            ?: return@addTool errorResult("Parameter 'query' is required")
-        val filename = request.arguments.optionalString("filename")
-        runPipeline {
-            val result = pipeline.runPipeline(query, filename)
-            toolResult(formatPipelineRun(result))
-        }
-    }
 }
 
 private fun toolResult(text: String): CallToolResult {
