@@ -20,7 +20,6 @@ dependencies {
     implementation("io.modelcontextprotocol:kotlin-sdk-server:${mcpVersion}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
-    implementation("org.xerial:sqlite-jdbc:3.49.1.0")
 
     testImplementation(kotlin("test"))
 }
