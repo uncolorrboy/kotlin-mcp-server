@@ -7,6 +7,8 @@ import io.modelcontextprotocol.kotlin.sdk.server.ServerOptions
 import io.modelcontextprotocol.kotlin.sdk.server.mcpStreamableHttp
 import io.modelcontextprotocol.kotlin.sdk.types.Implementation
 import io.modelcontextprotocol.kotlin.sdk.types.ServerCapabilities
+import ru.sapozhnikov.files.FileSaveService
+import ru.sapozhnikov.files.registerFileTools
 import ru.sapozhnikov.github.GitHubClient
 import ru.sapozhnikov.pipeline.PipelineService
 import ru.sapozhnikov.pipeline.registerPipelineTools
@@ -30,7 +32,9 @@ fun main(args: Array<String>) {
 
     val githubClient = GitHubClient()
     val pipelineOutputDir = Path.of(System.getenv("PIPELINE_OUTPUT_DIR") ?: "data/pipeline")
+    val fileOutputDir = Path.of(System.getenv("FILE_OUTPUT_DIR") ?: "data/files")
     val pipelineService = PipelineService(githubClient, pipelineOutputDir)
+    val fileSaveService = FileSaveService(fileOutputDir)
 
     val mcpServer = Server(
         serverInfo = Implementation(
@@ -45,6 +49,7 @@ fun main(args: Array<String>) {
     )
 
     mcpServer.registerPipelineTools(pipelineService)
+    mcpServer.registerFileTools(fileSaveService)
 
     Runtime.getRuntime().addShutdownHook(Thread {
         AppLog.info("Shutting down...")
@@ -53,6 +58,7 @@ fun main(args: Array<String>) {
 
     AppLog.info("MCP endpoint: http://$host:$port/mcp")
     AppLog.info("Pipeline output: ${pipelineOutputDir.toAbsolutePath()}")
+    AppLog.info("File output: ${fileOutputDir.toAbsolutePath()}")
 
     embeddedServer(CIO, host = host, port = port) {
         mcpStreamableHttp(

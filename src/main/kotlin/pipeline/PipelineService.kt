@@ -6,6 +6,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
 import ru.sapozhnikov.AppLog
+import ru.sapozhnikov.files.sanitizeFilename
 import ru.sapozhnikov.github.GitHubClient
 import ru.sapozhnikov.github.GitHubResponse
 import java.nio.charset.StandardCharsets
@@ -73,7 +74,7 @@ class PipelineService(
         val summary = context.summary
             ?: throw IllegalStateException("Pipeline '$pipelineId' has no summary. Run summarize first.")
 
-        val safeName = sanitizeFilename(filename ?: defaultFilename(context.query))
+        val safeName = sanitizeFilename(filename ?: defaultFilename(context.query), defaultName = "pipeline-result")
         Files.createDirectories(outputDir)
         val filePath = outputDir.resolve(safeName)
         Files.writeString(filePath, summary, StandardCharsets.UTF_8)
@@ -165,14 +166,6 @@ class PipelineService(
 
     private fun requireContext(pipelineId: String): PipelineContext =
         contexts[pipelineId] ?: throw IllegalArgumentException("Pipeline '$pipelineId' not found")
-
-    private fun sanitizeFilename(name: String): String {
-        val cleaned = name.replace(Regex("[^a-zA-Z0-9._-]"), "_").trim('_', '.')
-        if (cleaned.isBlank()) return "pipeline-result.txt"
-        val lastDot = cleaned.lastIndexOf('.')
-        val hasExtension = lastDot > 0 && lastDot < cleaned.length - 1
-        return if (hasExtension) cleaned else "$cleaned.txt"
-    }
 
     private fun defaultFilename(query: String?): String {
         val slug = query?.lowercase()
